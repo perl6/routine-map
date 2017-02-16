@@ -1,18 +1,62 @@
 #!/usr/bin/env perl6
 
-# Subs
-.say for find-symbols({
-    $_ ~~ Sub and .DEFINITE and .name !~~ /^<[A..Z_-]>+ (':<'.+)? $/
-}, :sort(*.name)).elems; #.map({ .candidates.Slip }).elems;
+constant MAP_FILE = 'map.json'.IO;
+use JSON::Tiny;
 
-.say for find-symbols({
-    !.DEFINITE and try .^can('say')
-}, :sort(*.^name)).unique.grep({
-    try .^methods
-}).map(*.^methods).grep({try .gist}).flat.elems;
-# .flat.map({
-#     try {.candidates} ?? .candidates !! $_
-# }).flat.elems;
+my @data = |subs, |methods;
+say "Writing {+@data} entries to {MAP_FILE}";
+MAP_FILE.spurt: to-json %(
+    made-on  => ~DateTime.now,
+    routines => @data,
+);
+
+sub subs {
+    find-symbols({
+        $_ ~~ Sub and .DEFINITE and .name !~~ /^<[A..Z_-]>+ (':<'.+)? $/
+    }, :sort(*.name))».&keyit;
+}
+
+sub methods {
+    return ();
+    .say for find-symbols({
+        !.DEFINITE and try .^can('say')
+    }, :sort(*.^name)).unique.grep({
+        try .^methods
+    }).map(*.^methods).grep({try .gist}).flat.elems;
+    # .flat.map({
+    #     try {.candidates} ?? .candidates !! $_
+    # }).flat.elems;
+}
+
+sub keyit {
+    given $^what {%(
+            <type         name  file    candidates  >
+        Z=> .WHAT.^name, .name, .file, |cand-info(.candidates».signature)
+    )}
+}
+
+sub cand-info (@candidates) {
+    my @aritites;
+    my @counts;
+    my @named;
+    my @pos;
+    my @slurpy;
+    my @signatures;
+    for @candidates {
+        my ($named, $pos, $slurpy) = (0, 0, 0);
+        for .params {
+            .named      and $named++;
+            .positional and $pos++;
+            .slurpy     and $slurpy++;
+        }
+        @named     .push: $named;
+        @pos       .push: $pos;
+        @slurpy    .push: $slurpy;
+        @arities   .push: .arity;
+        @counts    .push: .count;
+        @signatures.push: .gist;
+    }
+}
 
 sub find-symbols ($matcher, :$sort) {
     my @answer = CORE::.keys.grep(

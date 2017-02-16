@@ -1,0 +1,14 @@
+{
+    "perl"         : "6.*",
+    "name"         : "Perl6-Routine-Map",
+    "version"      : "1.001001",
+    "description"  : "View information about Perl 6 routines",
+    "depends"      : [
+        "JSON::Tiny",
+        "File::Find",
+        "HTTP::Server::Tiny"
+    ],
+    "test-depends" : [ "Test" ],
+    "authors"      : ["Zoffix Znet"],
+    "support"      : {"source"   : "git://github.com/perl6/routine-map.git"}
+}
