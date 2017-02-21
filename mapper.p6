@@ -28,33 +28,25 @@ sub methods {
     # }).flat.elems;
 }
 
-sub keyit {
-    given $^what {%(
-            <type         name  file    candidates  >
-        Z=> .WHAT.^name, .name, .file, |cand-info(.candidates».signature)
-    )}
+sub keyit ($_) {
+    %(
+            <type         name   file  candidates>
+        Z=> .WHAT.^name, .name, .file, cand-info .candidates».signature
+    )
 }
 
 sub cand-info (@candidates) {
-    my @aritites;
-    my @counts;
-    my @named;
-    my @pos;
-    my @slurpy;
-    my @signatures;
-    for @candidates {
-        my ($named, $pos, $slurpy) = (0, 0, 0);
+    @candidates.map: {
+        my %info = :0named, :0pos, :0slurpy, :signature(.gist),
+            :count($_ == Inf ?? "Inf" !! $_ with .count), # Inf in JSON => null
+            :arity($_ == Inf ?? "Inf" !! $_ with .arity); # Inf in JSON => null
+
         for .params {
-            .named      and $named++;
-            .positional and $pos++;
-            .slurpy     and $slurpy++;
+            .named      and %info<named>++;
+            .positional and %info<pos>++;
+            .slurpy     and %info<slurpy>++;
         }
-        @named     .push: $named;
-        @pos       .push: $pos;
-        @slurpy    .push: $slurpy;
-        @arities   .push: .arity;
-        @counts    .push: .count;
-        @signatures.push: .gist;
+        %info
     }
 }
 
