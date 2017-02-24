@@ -5,7 +5,7 @@ Online version for Rakudo implementation:
 
 # Building / Viewing
 
-1. Run `mapper.p6` to generate `map.json` file that include mapping data.
+1. Run `perl6 mapper.p6` to generate `map.json` file that include mapping data.
 2. Run `perl6 viewer.p6` to start the local viewing web server
 3. Visit [http://localhost:3000/](http://localhost:3000/) to view the map
 
