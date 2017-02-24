@@ -17,15 +17,13 @@ sub subs {
 }
 
 sub methods {
-    return ();
-    .say for find-symbols({
-        !.DEFINITE and try .^can('say')
+    find-symbols({
+        !.DEFINITE and try .can('say')
     }, :sort(*.^name)).unique.grep({
         try .^methods
-    }).map(*.^methods).grep({try .gist}).flat.elems;
-    # .flat.map({
-    #     try {.candidates} ?? .candidates !! $_
-    # }).flat.elems;
+    }).map(*.^methods.Slip).grep({
+        try {.gist} and .^name ne 'ForeignCode'
+    })».&keyit;
 }
 
 sub keyit ($_) {

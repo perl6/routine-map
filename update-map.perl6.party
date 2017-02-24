@@ -1,0 +1,5 @@
+#!/bin/bash
+set -x
+set -e
+wget http://localhost:3000/ -O index.html
+scp assets/* index.html perl6.party:/var/www/map.perl6.party
