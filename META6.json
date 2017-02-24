@@ -10,6 +10,6 @@
         "HTML::Entity"
     ],
     "test-depends" : [ "Test" ],
-    "authors"      : ["Zoffix Znet"],
+    "authors"      : [ "Zoffix Znet" ],
     "support"      : {"source"   : "git://github.com/perl6/routine-map.git"}
 }
