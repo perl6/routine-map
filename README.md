@@ -31,3 +31,6 @@ may be different. These include:
     ](https://github.com/drvic10k/bootstrap-sortable)
 - `tinysort`, copyright Ron Valstar <ron@ronvalstar.nl>, licensed under MIT; see
     [tinysort.sjeiti.com](http://tinysort.sjeiti.com/)
+- `morbo.p6`, copyright Zoffix Znet, licensed under Artistic License 2.0;
+    see [github.com/zoffixznet/perl6-Bailador-Dev-AutoRestarter
+    ](https://github.com/zoffixznet/perl6-Bailador-Dev-AutoRestarter)
