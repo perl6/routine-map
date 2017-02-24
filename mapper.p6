@@ -7,19 +7,17 @@ my @data = unique :with(&[eqv]), |subs, |methods;
 say "Writing {+@data} entries to {MAP_FILE}";
 MAP_FILE.spurt: to-json %(
     made-on  => ~DateTime.now,
-    routines => @data,
+    routines => @data.sort: *.<name>,
 );
 
 sub subs {
     find-symbols({
         $_ ~~ Sub and .DEFINITE and .name !~~ /^<[A..Z_-]>+ (':<'.+)? $/
-    }, :sort(*.name))».&keyit;
+    })».&keyit;
 }
 
 sub methods {
-    find-symbols({
-        !.DEFINITE and try .can('say')
-    }, :sort(*.^name)).unique.grep({
+    find-symbols({ !.DEFINITE and try .can('say') }).unique.grep({
         try .^methods
     }).map(*.^methods.Slip).grep({
         try {.gist} and .^name ne 'ForeignCode'
@@ -51,12 +49,8 @@ sub cand-info (@candidates) {
     }
 }
 
-sub find-symbols ($matcher, :$sort) {
-    my @answer = CORE::.keys.grep(
+sub find-symbols ($matcher) {
+    eager CORE::.keys.grep(
         * ne 'IterationEnd'
     ).map({CORE::{$_}}).grep($matcher);
-
-    @answer .= sort: $sort if $sort;
-
-    @answer;
 }

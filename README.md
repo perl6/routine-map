@@ -6,13 +6,17 @@ Online version for Rakudo implementation:
 # Building / Viewing
 
 1. Run `zef --depsonly install .` to install dependencies.
-2. Run `perl6 mapper.p6` to generate `map.json` file that include mapping data.
-3. Run `perl6 viewer.p6` to start the local viewing web server
+2. Run `./mapper.p6` to generate `map.json` file that include mapping data.
+3. Run `./bin/viewer.p6` to start the local viewing web server
 4. Visit [http://localhost:3000/](http://localhost:3000/) to view the map
 
 If you got appropriate permissions, to sync data with map.perl6.party website,
 run `./update-map.perl6.party` script. Note: the viewer server needs to be
 running at the time.
+
+If you're doing development on the viewer, you may find it handy to start
+it with `./morbo.p6 bin/viewer.p6` that will auto-restart the server when
+detecting any changes to the source code.
 
 # License
 
