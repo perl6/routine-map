@@ -3,7 +3,7 @@
 constant MAP_FILE = 'map.json'.IO;
 use JSON::Tiny;
 
-my @data = |subs, |methods;
+my @data = unique :with(&[eqv]), |subs, |methods;
 say "Writing {+@data} entries to {MAP_FILE}";
 MAP_FILE.spurt: to-json %(
     made-on  => ~DateTime.now,
@@ -27,14 +27,17 @@ sub methods {
 }
 
 sub keyit ($_) {
+    my $file = .file;
+    $file.starts-with: $_ and $file .= substr: .chars with 'SETTING::';
+    $file .= split('/').=tail if $file.starts-with: '/'; # toss full paths
     %(
             <type         name   file  candidates>
-        Z=> .WHAT.^name, .name, .file, cand-info .candidates».signature
+        Z=> .WHAT.^name, .name, $file, cand-info .candidates».signature
     )
 }
 
 sub cand-info (@candidates) {
-    @candidates.map: {
+    eager @candidates.map: {
         my %info = :0named, :0pos, :0slurpy, :signature(.gist),
             :count($_ == Inf ?? "Inf" !! $_ with .count), # Inf in JSON => null
             :arity($_ == Inf ?? "Inf" !! $_ with .arity); # Inf in JSON => null
