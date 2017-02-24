@@ -6,7 +6,8 @@
     "depends"      : [
         "JSON::Tiny",
         "File::Find",
-        "HTTP::Server::Tiny"
+        "HTTP::Server::Tiny",
+        "HTML::Entity"
     ],
     "test-depends" : [ "Test" ],
     "authors"      : ["Zoffix Znet"],

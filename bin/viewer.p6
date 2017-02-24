@@ -1,6 +1,7 @@
 #!/usr/bin/env perl6
 use HTTP::Server::Tiny;
 use JSON::Tiny;
+use HTML::Entity;
 
 constant $host     = '0.0.0.0';
 constant $port     = 3000;
@@ -22,19 +23,19 @@ constant ASSETS    = $?FILE.IO.parent.parent.child: 'assets';
 sub page ($routines) {
     my $table = join "\n", map {"<tr>$_\</tr>"}, $routines.map: {
         my $meta = Q:c:to/META_END/;
-        <td>{.<file>}</td>
-        <td>{.<type>}</td>
-        <td>{.<name>}</td>
+        <td>{encode-entities .<file>}</td>
+        <td>{encode-entities .<type>}</td>
+        <td>{encode-entities .<name>}</td>
         META_END
 
         |.<candidates>.map: {
             $meta ~ Q:c:to/CANDIDATE_END/
-            <td>{.<named>}</td>
-            <td>{.<pos>}</td>
-            <td>{.<slurpy>}</td>
-            <td>{.<arity>}</td>
-            <td>{.<count>}</td>
-            <td>{.<signature>}</td>
+            <td>{encode-entities .<named>}</td>
+            <td>{encode-entities .<pos>}</td>
+            <td>{encode-entities .<slurpy>}</td>
+            <td>{encode-entities .<arity>}</td>
+            <td>{encode-entities .<count>}</td>
+            <td>{encode-entities .<signature>}</td>
             CANDIDATE_END
         }
     }
@@ -59,8 +60,10 @@ sub page ($routines) {
     CSS_END
 }</style>
 <div class="container-fluid">
-    <p class="h3">
+    <p class="h4">
         Click on table headers to sort by that column (takes a bit of time)
+        <a href="/map.json" class="btn btn-primary"
+            >Download data in JSON format</a>
 
     <table id="routines" class="sortable table">
     <thead>
