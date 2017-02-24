@@ -24,7 +24,9 @@ sub page ($routines) {
     my $table = join "\n", map {"<tr>$_\</tr>"}, $routines.map: {
         my $meta = Q:c:to/META_END/;
         <td>{encode-entities .<file>}</td>
-        <td>{encode-entities .<type>}</td>
+        <td><small>{
+                encode-entities .<type>.subst: :g, /« 'anon|' \w+/, 'anon'
+            }</small></td>
         <td>{encode-entities .<name>}</td>
         META_END
 
@@ -65,7 +67,7 @@ sub page ($routines) {
         <a href="/map.json" class="btn btn-primary"
             >Download data in JSON format</a>
 
-    <table id="routines" class="sortable table">
+    <table id="routines" class="sortable table table-condensed">
     <thead>
         <tr>
             <th>File</th>
