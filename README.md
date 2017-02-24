@@ -15,7 +15,7 @@ running at the time.
 
 # License
 
-This code in this repo is Copyright © 2008-2017, The Perl Foundation,
+This code is Copyright © 2008-2017, The Perl Foundation,
 distributed under the terms of the Artistic License 2.0. For more details, see
 the full text of the license in the file [LICENSE](LICENSE).
 
