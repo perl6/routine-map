@@ -50,7 +50,7 @@ sub cand-info (@candidates) {
 }
 
 sub find-symbols ($matcher) {
-    eager CORE::.keys.grep(
+    @ = CORE::.keys.grep(
         * ne 'IterationEnd'
     ).map({CORE::{$_}}).grep($matcher);
 }
