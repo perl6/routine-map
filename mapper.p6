@@ -12,7 +12,7 @@ MAP_FILE.spurt: to-json %(
 
 sub subs {
     find-symbols({
-        $_ ~~ Sub and .DEFINITE and .name !~~ /^<[A..Z_-]>+ (':<'.+)? $/
+        $_ ~~ Sub and .DEFINITE and .name !~~ /^<['A..Z_-]>+ (':<'.+)? $/
     })».&keyit;
 }
 
