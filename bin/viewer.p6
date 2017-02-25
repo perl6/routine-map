@@ -65,7 +65,10 @@ sub page ($routines) {
     <p class="h4">
         Click on table headers to sort by that column (takes a bit of time)
         <a href="/map.json" class="btn btn-primary"
-            >Download data in JSON format</a>
+            >Data in JSON format</a>
+        <a href="https://github.com/perl6/routine-map"
+            class="btn btn-small btn-success"
+            >GitHub repository</a>
 
     <table id="routines" class="sortable table table-condensed">
     <thead>
