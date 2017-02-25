@@ -58,7 +58,7 @@ sub page ($routines) {
 <link rel="stylesheet" href="/sort.css">
 <style>{
     Q:to/CSS_END/
-        { white-space: nowrap }
+        th { white-space: nowrap }
     CSS_END
 }</style>
 <div class="container-fluid">
