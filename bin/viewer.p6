@@ -75,7 +75,7 @@ sub page ($routines) {
         <tr>
             <th>File</th>
             <th>Type</th>
-            <th data-defaultsort="desc">Name</th>
+            <th data-defaultsort="asc">Name</th>
             <th># Named</th>
             <th># Pos.</th>
             <th># Slurpy</th>
