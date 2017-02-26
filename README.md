@@ -7,6 +7,7 @@ Online version for Rakudo implementation:
 
 1. Run `zef --depsonly install .` to install dependencies.
 2. Run `./mapper.p6` to generate `map.json` file that include mapping data.
+    Note that this operation takes several minutes to complete.
 3. Run `./bin/viewer.p6` to start the local viewing web server
 4. Visit [http://localhost:3000/](http://localhost:3000/) to view the map
 

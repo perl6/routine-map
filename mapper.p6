@@ -2,9 +2,11 @@
 
 constant MAP_FILE = 'map.json'.IO;
 use JSON::Tiny;
+use nqp;
 
-my @data = unique :with(&[eqv]), |subs, |methods;
+my @data = unique :as(*.perl), |subs, |methods;
 say "Writing {+@data} entries to {MAP_FILE}";
+
 MAP_FILE.spurt: to-json %(
     made-on  => ~DateTime.now,
     routines => @data.sort: *.<name>,
@@ -12,16 +14,17 @@ MAP_FILE.spurt: to-json %(
 
 sub subs {
     find-symbols({
-        $_ ~~ Sub and .DEFINITE and .name !~~ /^<['A..Z_-]>+ (':<'.+)? $/
+        .DEFINITE and nqp::istype($_, Sub)
+            and .name !~~ /^<['A..Z_-]>+ (':<'.+)? $/
     })».&keyit;
 }
 
 sub methods {
-    find-symbols({ !.DEFINITE and try .can('say') }).unique.grep({
-        try .^methods
-    }).map(*.^methods.Slip).grep({
-        try {.gist} and .^name ne 'ForeignCode'
-    })».&keyit;
+    find-symbols({
+        !.DEFINITE and try .^can('say')
+    }).unique.map(*.^methods(:local).Slip).grep({
+        try {.^can: 'gist'} and .^name ne 'ForeignCode'
+    }).unique(:as(*.perl))».&keyit
 }
 
 sub keyit ($_) {
@@ -50,7 +53,18 @@ sub cand-info (@candidates) {
 }
 
 sub find-symbols ($matcher) {
-    @ = CORE::.keys.grep(
-        * ne 'IterationEnd'
-    ).map({CORE::{$_}}).grep($matcher);
+    eager grep $matcher, map {*.^name.say; $_}, lazy gather {
+        my Mu %seen{Mu};
+        for CORE::.keys.grep(* ne 'IterationEnd') {
+            try {.^methods} and take $_ given CORE::{$_};
+
+            sub dig ($stash) {
+                for $stash.keys {
+                    try {.^methods} and take $_ given $stash{$_};
+                    next if %seen{ $_ }++;
+                    try { .keys } and .&dig given $stash{$_}.WHO;
+                }
+            }(CORE::{$_}.WHO) if try CORE::{$_}.WHO.keys;
+        }
+    }
 }
