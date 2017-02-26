@@ -5,12 +5,16 @@ use JSON::Tiny;
 use nqp;
 
 my @data = unique :as(*.perl), |subs, |methods;
-say "Writing {+@data} entries to {MAP_FILE}";
-say "There are {@data.map(*.<name>).unique.elems} unique routine names";
+my $total = +@data;
+my $unique = @data.map(*.<name>).unique.elems;
+say "Writing $total entries to {MAP_FILE}";
+say "There are $unique unique routine names";
 
 MAP_FILE.spurt: to-json %(
     made-on  => ~DateTime.now,
-    routines => @data.sort: *.<name>,
+    routines => @data.sort(*.<name>),
+    total    => $total,
+    unique   => $unique,
 );
 
 sub subs {

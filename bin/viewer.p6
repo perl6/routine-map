@@ -16,11 +16,11 @@ constant ASSETS    = $?FILE.IO.parent.parent.child: 'assets';
     when '/sort.js' | '/moment.js' { res 'application/javascript', .&asset   }
     when '/sort.css'               { res 'text/css',               .&asset   }
     when '/map.json'               { res 'application/json', slurp DATA_FILE }
-    when '/' { res 'text/html', page DATA_FILE.slurp.&from-json<routines>    }
+    when '/'              { res 'text/html', page DATA_FILE.slurp.&from-json }
     404, ['Content-Type' => 'text/plain'], ['404']
 } with HTTP::Server::Tiny.new: :$host, :$port;
 
-sub page ($routines) {
+sub page (% (:$made-on, :$routines, :$total, :$unique)) {
     my $table = join "\n", map {"<tr>$_\</tr>"}, $routines.map: {
         my $meta = Q:c:to/META_END/;
         <td>{encode-entities .<file>}</td>
@@ -62,6 +62,8 @@ sub page ($routines) {
     CSS_END
 }</style>
 <div class="container-fluid">
+    <p>Generated on {$made-on}. Table contains {$total} routines;
+        {$unique} unique names
     <p class="h4">
         Click on table headers to sort by that column (takes a bit of time)
         <a href="/map.json" class="btn btn-primary"
