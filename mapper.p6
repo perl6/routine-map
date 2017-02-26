@@ -6,6 +6,7 @@ use nqp;
 
 my @data = unique :as(*.perl), |subs, |methods;
 say "Writing {+@data} entries to {MAP_FILE}";
+say "There are {@data.map(*.<name>).unique.elems} unique routine names";
 
 MAP_FILE.spurt: to-json %(
     made-on  => ~DateTime.now,
