@@ -12,6 +12,8 @@ say "There are $unique unique routine names";
 
 MAP_FILE.spurt: to-json %(
     made-on  => ~DateTime.now,
+    compiler => ~$*PERL.compiler.name,
+    version  => ~$*PERL.compiler.version,
     routines => @data.sort(*.<name>),
     total    => $total,
     unique   => $unique,
