@@ -33,18 +33,20 @@ sub methods {
 }
 
 sub keyit ($_) {
-    my $file = .file;
-    $file.starts-with: $_ and $file .= substr: .chars with 'SETTING::';
-    $file .= split('/').=tail if $file.starts-with: '/'; # toss full paths
     %(
-            <type         name   file  candidates>
-        Z=> .WHAT.^name, .name, $file, cand-info .candidates».signature
+            <type         name   candidates>
+        Z=> .WHAT.^name, .name,  cand-info .candidates
     )
 }
 
 sub cand-info (@candidates) {
-    eager @candidates.map: {
-        my %info = :0named, :0pos, :0slurpy, :signature(.gist),
+    eager @candidates.map: -> $_ is copy {
+        my $file = .file;
+        $file.starts-with: $_ and $file .= substr: .chars with 'SETTING::';
+        $file .= split('/').=tail if $file.starts-with: '/'; # toss full paths
+
+        $_ .= signature;
+        my %info = :0named, :0pos, :0slurpy, :signature(.gist), :$file,
             :count($_ == Inf ?? "Inf" !! $_ with .count), # Inf in JSON => null
             :arity($_ == Inf ?? "Inf" !! $_ with .arity); # Inf in JSON => null
 

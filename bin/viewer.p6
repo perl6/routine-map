@@ -23,7 +23,6 @@ constant ASSETS    = $?FILE.IO.parent.parent.child: 'assets';
 sub page (% (:$made-on, :$routines, :$total, :$unique)) {
     my $table = join "\n", map {"<tr>$_\</tr>"}, $routines.map: {
         my $meta = Q:c:to/META_END/;
-        <td>{encode-entities .<file>}</td>
         <td><small>{
                 encode-entities .<type>.subst: :g, /« 'anon|' \w+/, 'anon'
             }</small></td>
@@ -31,7 +30,8 @@ sub page (% (:$made-on, :$routines, :$total, :$unique)) {
         META_END
 
         |.<candidates>.map: {
-            $meta ~ Q:c:to/CANDIDATE_END/
+            Q:c|<td>{encode-entities .<file>}</td>|
+            ~ $meta ~ Q:c:to/CANDIDATE_END/
             <td>{encode-entities .<named>}</td>
             <td>{encode-entities .<pos>}</td>
             <td>{encode-entities .<slurpy>}</td>
